@@ -1,0 +1,29 @@
+{
+    "nw": {
+        "ins": [
+            {
+                "psk": ""
+            }
+        ]
+    },
+    "ap": {
+        "psk": "wled1234"
+    },
+    "if": {
+        "blynk": {
+            "token": ""
+        },
+        "mqtt": {
+            "psk": ""
+        },
+        "hue": {
+            "key": "api"
+        }
+    },
+    "ota": {
+        "pwd": "wledota",
+        "lock": false,
+        "lock-wifi": false,
+        "aota": true
+    }
+}

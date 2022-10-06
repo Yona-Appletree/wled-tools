@@ -1,0 +1,5 @@
+{
+    "execMap": {
+        "ts": "NODE_ENV=development NODE_OPTIONS='--loader ts-node/esm' ts-node -T"
+    }
+}

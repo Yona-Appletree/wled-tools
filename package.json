@@ -1,0 +1,17 @@
+{
+    "dependencies": {
+        "@types/inquirer": "^8.2.1",
+        "@types/node-fetch": "^2.6.1",
+        "@types/plist": "^3.0.2",
+        "@types/shelljs": "^0.8.11",
+        "@types/xml2js": "^0.4.11",
+        "inquirer": "^8.2.4",
+        "node-fetch": "^2.6.7",
+        "plist": "^3.0.5",
+        "shelljs": "^0.8.5",
+        "xml2js": "^0.4.23"
+    },
+    "devDependencies": {
+        "ts-node": "^10.8.1"
+    }
+}
