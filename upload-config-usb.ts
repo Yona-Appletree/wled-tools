@@ -5,14 +5,40 @@ import { useFirstOrChoose } from "./util/console-util";
 import { appStep, fail, runShell } from "./util/general";
 import * as fs from "fs";
 import { WledApiJsonConfig } from "./util/wled-config.api";
-import { WledStoredPresetsFile } from "./util/wled-preset-api";
+import { UInt8, WledStoredPresetInfo, WledStoredPresetsFile } from "./util/wled-preset-api";
+import { max } from "rxjs";
 
-(async () => {
+async function main() {
     const configName = process.argv[2];
-    const wifiName = process.argv[3];
-    const ledCount = parseInt(process.argv[4]) || 200;
 
-    if (! configName || ! wifiName || ! ledCount) {
+    const params: Array<{ def: CustomParamDef, value: string | null}> = paramDefinitions.map(param => {
+        const index = process.argv.findIndex(it => it == "--" + param.name);
+
+        return {
+            def: param,
+            value: index > 0 ? process.argv[index + 1] : null
+        };
+    });
+
+    const usageStr = `Usage ${process.argv[1]} <config-name>`
+        + paramDefinitions.filter(it => it.required).map(it => `\n\t--${it.name} <value>`).join()
+        + paramDefinitions.filter(it => ! it.required).map(it => `\n\t[--${it.name} <value>]`).join();
+
+    params.forEach(param => {
+        if (param.def.required && param.value === null) {
+            fail("Required parameter not provided: " + param.def.name + "\n\n" + usageStr);
+        }
+
+        if (param.value !== null) {
+            const errorMsg = param.def.validate(param.value);
+
+            if (errorMsg) {
+                fail("Parameter " + param.def.name + " invalid: " + errorMsg);
+            }
+        }
+    });
+
+    if (! configName) {
         fail(`Usage ${process.argv[0]} <config-name> <wifi-name> <led-count>`);
     }
 
@@ -46,22 +72,20 @@ import { WledStoredPresetsFile } from "./util/wled-preset-api";
     // =================================================================================================================
     // Update configs
 
-    configJson.ap.ssid = wifiName;
-    console.info(`Updated wifi name to "${wifiName}"`);
-
-    Object.keys(presetsJson).forEach(presetId => {
-        const preset = presetsJson[presetId];
-        if (preset.seg?.[0]) {
-            console.info(`Updated preset ${presetId} led count to ` + ledCount);
-            preset.seg[0].len = ledCount;
+    params.forEach(param => {
+        if (param.value !== null) {
+            param.def.update(
+                param.value,
+                configJson,
+                Object.values(presetsJson)
+            )
         }
     });
 
-    configJson.hw.led.ins[0].len = ledCount;
-    console.info(`Updated led output 0 led count to ${ledCount}`);
-
     // =================================================================================================================
     // Write configs
+
+    const wifiName = params.find(it => it.def.name === "ssid")?.value || "Unknown";
 
     const buildDir = `./config-builds/${configName}-${wifiName.replaceAll(/[^a-z0-9]/gi, "_")}-${Date.now()}`
 
@@ -90,7 +114,95 @@ import { WledStoredPresetsFile } from "./util/wled-preset-api";
             `esptool/bin/esptool.py --port "${serialPort}" --baud 115200 --before default_reset --after hard_reset write_flash 0x310000 "${buildDir}/littlefs.bin"`
         ),
     );
-})();
+}
+
+interface CustomParamDef {
+    name: string;
+    description: string;
+    required: boolean;
+    validate: (value: string) => null | string,
+    update: (value: string, config: WledApiJsonConfig, presets: WledStoredPresetInfo[]) => void;
+}
+
+const paramDefinitions: CustomParamDef[] = [
+    {
+        name: "ledCount",
+        required: false,
+        description: "Number of LEDs on the board",
+        validate: value => isNaN(parseInt(value)) ? "LED Count must be a number" : null,
+        update: (value, config, presets) => {
+            const ledCount = parseInt(value);
+
+            presets.forEach((preset, index) => {
+                if (preset.seg?.[0]) {
+                    preset.seg[0].stop = ledCount;
+                }
+            });
+
+            config.hw.led.ins[0].len = ledCount;
+        }
+    },
+
+    {
+        name: "ssid",
+        required: true,
+        description: "Wifi access point name (SSID)",
+        validate: value => {
+            if (! value) return "required";
+            if (value.length < 2 || value.length > 32) return "must be between 2 and 32 characters";
+            return null;
+        },
+        update: (value, config, presets) => {
+            config.ap.ssid = value;
+        }
+    },
+
+    {
+        name: "brightness",
+        required: false,
+        description: "Default brightness for LEDs",
+
+        validate: value => {
+            const num = parseInt(value);
+            if (isNaN(num)) return "must be a number";
+
+            if (num < 1 || num > 255) return "must be between 1 and 255";
+
+            return null;
+        },
+        update: (value, config, presets) => {
+            const brightness = parseInt(value);
+
+            presets.forEach((preset, index) => {
+                preset.bri = brightness as UInt8;
+            });
+        }
+    },
+
+    {
+        name: "maxMa",
+        required: false,
+        description: "Maximum milliamps for current limiter. Zero to disable.",
+
+        validate: value => {
+            const num = parseInt(value);
+            if (isNaN(num)) return "must be a number";
+
+            return null;
+        },
+        update: (value, config, presets) => {
+            const maxMa = parseInt(value);
+
+            if (maxMa == 0) {
+                config.hw.led.ledma = 0;
+            } else {
+                config.hw.led.ledma = 55;
+                config.hw.led.maxpwr = maxMa;
+            }
+        }
+    },
+];
+
 
 export function wifiSecuritySec() {
     return {
@@ -123,3 +235,6 @@ export function wifiSecuritySec() {
         }
     };
 }
+
+
+main();
