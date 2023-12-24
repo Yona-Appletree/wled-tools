@@ -1,2 +1,22 @@
-/opt/homebrew/Cellar/esptool/3.2_1/bin/esptool.py --chip esp32 --baud 230400 --before default_reset --after hard_reset read_flash 0x300000 0xfa000 $1
+#!/usr/bin/env sh
 
+NAME=$1
+
+# Abort if no name given
+if [ -z "$NAME" ]
+then
+    echo "No name given"
+    exit 1
+fi
+
+# Make the directory
+mkdir -p $NAME
+
+# Generate the filename
+FILENAME="$NAME/dumped.bin"
+
+# Do the read
+esptool.py --baud 115200 --before default_reset --after hard_reset read_flash 0x310000 0xF0000 $FILENAME
+
+# Decode the file
+mklittlefs/mklittlefs -u "$NAME/contents" "$FILENAME"

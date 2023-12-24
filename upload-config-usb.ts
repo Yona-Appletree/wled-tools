@@ -49,6 +49,10 @@ async function main() {
         it => it
     );
 
+    if (! serialPort) {
+        fail("No serial port found");
+    }
+
     const configDir = `configs/${configName}`;
 
     if (! fs.statSync(configDir)?.isDirectory()) {
@@ -101,7 +105,9 @@ async function main() {
     await appStep(
         "Packaging littlefs",
         () => runShell(
-            `./mklittlefs/mklittlefs -c "${buildDir}" "${buildDir}/littlefs.bin"`
+            // Note that the size is required on newer versions of WLED apparently. Ran into issues
+            // in Dec 2023
+            `./mklittlefs/mklittlefs -c "${buildDir}" --size 983040 "${buildDir}/littlefs.bin"`
         ),
     );
 
@@ -111,7 +117,7 @@ async function main() {
     await appStep(
         "Uploading littlefs",
         () => runShell(
-            `esptool/bin/esptool.py --port "${serialPort}" --baud 115200 --before default_reset --after hard_reset write_flash 0x310000 "${buildDir}/littlefs.bin"`
+            `esptool.py --port "${serialPort}" --baud 115200 --before default_reset --after hard_reset write_flash 0x310000 "${buildDir}/littlefs.bin"`
         ),
     );
 }
