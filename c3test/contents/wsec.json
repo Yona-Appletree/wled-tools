@@ -1,0 +1,1 @@
+{"nw":{"ins":[{"psk":""}]},"ap":{"psk":"wled1234"},"if":{"mqtt":{"psk":""},"hue":{"key":"api"}},"pin":"","ota":{"pwd":"wledota","lock":false,"lock-wifi":false,"aota":true}}
