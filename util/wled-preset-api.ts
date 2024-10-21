@@ -1,4 +1,4 @@
-import { Dictionary } from "./dictionary.util";
+import { Dictionary } from './dictionary.util';
 
 export interface WledApiJsonStateResponse {
   state: WledApiGlobalState;
@@ -8,60 +8,62 @@ export interface WledApiJsonStateResponse {
 }
 
 export function isWledApiJsonPresetResponse(
-  input: unknown
+  input: unknown,
 ): input is WledApiJsonStateResponse {
-  return typeof input === "object"
-    && typeof (input as Dictionary<unknown>).state === "object"
-    && typeof (input as Dictionary<unknown>).info === "object"
-    && typeof (input as Dictionary<unknown>).effects === "object"
-    && typeof (input as Dictionary<unknown>).palettes === "object";
+  return (
+    typeof input === 'object' &&
+    typeof (input as Dictionary<unknown>).state === 'object' &&
+    typeof (input as Dictionary<unknown>).info === 'object' &&
+    typeof (input as Dictionary<unknown>).effects === 'object' &&
+    typeof (input as Dictionary<unknown>).palettes === 'object'
+  );
 }
 
 export interface WledApiGlobalInfo {
   // WLED_GLOBAL char versionString[]
-  "ver": string;
+  ver: string;
 
   // #define VERSION: version code in format yymmddb (b = daily build)
-  "vid": number;
+  vid: number;
 
   //
-  "leds": {
+  leds: {
     // WLED_GLOBAL uint16_t ledCount _INIT(30);          // overcurrent prevented by ABL
-    "count": UInt16,
+    count: UInt16;
 
     // WLED_GLOBAL bool useRGBW      _INIT(false);       // SK6812 strips can contain an extra White channel
-    "rgbw": boolean,
+    rgbw: boolean;
 
     // useRGBW && (strip.rgbwMode == RGBW_MODE_MANUAL_ONLY || strip.rgbwMode == RGBW_MODE_DUAL); // should a white channel slider be displayed?
-    "wv": boolean,
+    wv: boolean;
 
     // #define LEDPIN 2  //strip pin. Any for ESP32, gpio2 or 3 is recommended for ESP8266 (gpio2/3 are labeled D4/RX on NodeMCU and Wemos)
-    "pin": [ number ],
+    pin: [number];
 
     // WS2812FX::currentMilliamps
-    "pwr": UInt16,
+    pwr: UInt16;
 
     // (WS2812FX::currentMilliamps) ? WS2812FX::ablMilliampsMax : 0
-    "maxpwr": UInt16,
+    maxpwr: UInt16;
 
     // uint8_t WS2812FX::getMaxSegments(void)
-    "maxseg": UInt8,
+    maxseg: UInt8;
 
     // false; //will be used in the future to prevent modifications to segment config
-    "seglock": false
+    seglock: false;
   };
 
   // WLED_GLOBAL bool syncToggleReceive     _INIT(false);   // UIs which only have a single button for sync should toggle send+receive if this is true, only send otherwise
-  "str": boolean;
+  str: boolean;
 
   // WLED_GLOBAL char serverDescription[33] _INIT("WLED");  // Name of module
-  "name": string | "WLED";
+  name: string | 'WLED';
 
   // WLED_GLOBAL uint16_t udpPort    _INIT(21324); // WLED notifier default port
-  "udpport": 21324;
+  udpport: 21324;
 
   // WLED_GLOBAL byte realtimeMode _INIT(REALTIME_MODE_INACTIVE);
-  "live": WledApiRealtimeMode;
+  live: WledApiRealtimeMode;
 
   /**
    * switch (realtimeMode) {
@@ -76,12 +78,20 @@ export interface WledApiGlobalInfo {
    *   case REALTIME_MODE_DDP:      root["lm"] = F("DDP"); break;
    * }
    */
-  "lm": "" | "UDP" | "Hyperion" | "E1.31" | "USB Adalight/TPM2" | "Art-Net" | "tpm2.net" | "DDP";
+  lm:
+    | ''
+    | 'UDP'
+    | 'Hyperion'
+    | 'E1.31'
+    | 'USB Adalight/TPM2'
+    | 'Art-Net'
+    | 'tpm2.net'
+    | 'DDP';
 
   /**
    *  (realtimeIP[0] == 0) ? "" : realtimeIP.toString()
    */
-  "lip": string;
+  lip: string;
 
   /**
    * #ifdef WLED_ENABLE_WEBSOCKETS
@@ -90,45 +100,45 @@ export interface WledApiGlobalInfo {
    * root[F("ws")] = -1;
    * #endif
    */
-  "ws": 0;
+  ws: 0;
 
   // uint8_t WS2812FX::getModeCount()
-  "fxcount": UInt8;
+  fxcount: UInt8;
 
   // uint8_t WS2812FX::getPaletteCount()
-  "palcount": UInt8;
+  palcount: UInt8;
 
-  "wifi": WledApiWifiInfo;
-  "arch": WledArchName;
+  wifi: WledApiWifiInfo;
+  arch: WledArchName;
 
   // String EspClass::getCoreVersion()
-  "core": string;
+  core: string;
 
   /**
    * // X.x.x: Major version of the stack
    * #define LWIP_VERSION_MAJOR      1U
    */
-  "lwip": 1;
+  lwip: 1;
 
   // ESP.getFreeHeap();
-  "freeheap": number;
+  freeheap: number;
 
   // root[F("uptime")] = millis()/1000 + rolloverMillis*4294967;
-  "uptime": number;
+  uptime: number;
 
   /**
    * See WLED_BIT_WLED_*
    */
-  "opt": UInt8;
+  opt: UInt8;
 
   // Brand string
-  "brand": "WLED";
+  brand: 'WLED';
 
   // Product name
-  "product": "FOSS";
+  product: 'FOSS';
 
   // WLED_GLOBAL String escapedMac;
-  "mac": string;
+  mac: string;
 }
 
 export interface WLedApiSegmentDefinition {
@@ -184,10 +194,10 @@ export interface WLedApiSegmentDefinition {
  * realtime override modes
  */
 export enum WledApiNightlightMode {
-  SET = 0,            // NL_MODE_SET       - After nightlight time elapsed, set to target brightness
-  FADE = 1,            // NL_MODE_FADE      - Fade to target brightness gradually
-  COLORFADE = 2,            // NL_MODE_COLORFADE - Fade to target brightness and secondary color gradually
-  SUN = 3,            // NL_MODE_SUN       - Sunrise/sunset. Target brightness is set immediately, then Sunrise effect is started. Max 60 min.
+  SET = 0, // NL_MODE_SET       - After nightlight time elapsed, set to target brightness
+  FADE = 1, // NL_MODE_FADE      - Fade to target brightness gradually
+  COLORFADE = 2, // NL_MODE_COLORFADE - Fade to target brightness and secondary color gradually
+  SUN = 3, // NL_MODE_SUN       - Sunrise/sunset. Target brightness is set immediately, then Sunrise effect is started. Max 60 min.
 }
 
 export enum WledApiRealtimeOverride {
@@ -232,74 +242,72 @@ const BIT_WLED_DISABLE_OTA = 0x01;
 // See json.cpp#serializeState
 export interface WledApiGlobalState {
   // Indicates if current brightness value is greater than 0
-  "on": boolean;
+  on: boolean;
 
   // WLED_GLOBAL byte briLast -- brightness before turned off. Used for toggle function
-  "bri": UInt8;
+  bri: UInt8;
 
   // WLED_GLOBAL uint16_t transitionDelay / 100 -- transition delay, but divided by 100
-  "transition": number;
+  transition: number;
 
   // WLED_GLOBAL int16_t currentPreset
-  "ps": Int16;
+  ps: Int16;
 
   // WLED_GLOBAL uint16_t savedPresets -- number of currently saved presents?
-  "pss": number;
-
+  pss: number;
 
   // WLED_GLOBAL bool presetCyclingEnabled -- but encoded: (presetCyclingEnabled) ? 0: -1
-  "pl": Int16;
+  pl: Int16;
 
   // temporary for preset cycle
-  "ccnf": {
+  ccnf: {
     // WLED_GLOBAL byte presetCycleMin
-    "min": UInt8,
+    min: UInt8;
 
     // WLED_GLOBAL byte presetCycleMax
-    "max": UInt8,
+    max: UInt8;
 
     // WLED_GLOBAL uint16_t presetCycleTime
-    "time": UInt16
+    time: UInt16;
   };
 
   // "Nightlight" settings
-  "nl": {
+  nl: {
     // WLED_GLOBAL bool nightlightActive
-    "on": boolean,
+    on: boolean;
 
     // WLED_GLOBAL byte nightlightDelayMins
-    "dur": number,
+    dur: number;
 
     // WLED_GLOBAL byte nightlightMode -- but encoded (nightlightMode > NL_MODE_SET); //deprecated
-    "fade": boolean,
+    fade: boolean;
 
     // WLED_GLOBAL byte nightlightMode // See const.h for available modes. Was nightlightFade
-    "mode": WledApiNightlightMode,
+    mode: WledApiNightlightMode;
 
     // WLED_GLOBAL byte nightlightTargetBri // brightness after nightlight is over
-    "tbri": UInt8,
+    tbri: UInt8;
 
     // If nightlight mode is active, the remaining seconds: (nightlightDelayMs - (millis() - nightlightStartTime)) / 1000
     // otherwise -1
-    "rem": number
+    rem: number;
   };
 
-  "udpn": {
+  udpn: {
     // WLED_GLOBAL bool notifyDirect _INIT(false);                       // send notification if change via UI or HTTP API
-    "send": false,
+    send: false;
 
     // WLED_GLOBAL bool receiveNotifications _INIT(true);
-    "recv": true,
-
+    recv: true;
   };
 
   // WLED_GLOBAL byte realtimeOverride _INIT(REALTIME_OVERRIDE_NONE);
-  "lor": WledApiRealtimeOverride;
+  lor: WledApiRealtimeOverride;
 
   // uint8_t WS2812FX::getMainSegmentId
-  "mainseg": UInt8;
+  mainseg: UInt8;
 
-  "seg": WLedApiSegmentDefinition[];
+  seg: WLedApiSegmentDefinition[];
 }
 
 /**
@@ -307,229 +315,226 @@ export interface WledApiGlobalState {
  *
  * Stored as a dictionary of number -> preset
  */
-export type WledStoredPresetsFile = Dictionary<
-    WledStoredPresetInfo
->
+export type WledStoredPresetsFile = Dictionary<WledStoredPresetInfo>;
 
 /**
  * Format of presets as stored in presets.json in the WLED filesystem
  */
 export interface WledStoredPresetInfo {
-    /**
-     * Name of the preset
-     */
-    "n": string;
+  /**
+   * Name of the preset
+   */
+  n: string;
 
-    /**
-     * Indicates if the preset is enabled
-     */
-    "on": boolean;
+  /**
+   * Indicates if the preset is enabled
+   */
+  on: boolean;
 
-    /**
-     * WLED_GLOBAL byte briLast -- brightness before turned off. Used for toggle function
-     */
-    "bri": UInt8;
+  /**
+   * WLED_GLOBAL byte briLast -- brightness before turned off. Used for toggle function
+   */
+  bri: UInt8;
 
-    /**
-     * WLED_GLOBAL uint16_t transitionDelay / 100 -- transition delay, but divided by 100
-     */
-    "transition": number;
+  /**
+   * WLED_GLOBAL uint16_t transitionDelay / 100 -- transition delay, but divided by 100
+   */
+  transition: number;
 
-    /**
-     * uint8_t WS2812FX::getMainSegmentId
-     */
-    "mainseg": UInt8;
+  /**
+   * uint8_t WS2812FX::getMainSegmentId
+   */
+  mainseg: UInt8;
 
-    /**
-     * Segments
-     */
-    "seg": WLedApiSegmentDefinition[];
+  /**
+   * Segments
+   */
+  seg: WLedApiSegmentDefinition[];
 }
 
-export type WledArchName = "esp8266" | "esp32";
+export type WledArchName = 'esp8266' | 'esp32';
 
 export interface WledApiWifiInfo {
-  "bssid": string;
-  "rssi": number; // e.g. -67
-  "signal": number; // e.g. 66
-  "channel": number; // e.g. 11
+  bssid: string;
+  rssi: number; // e.g. -67
+  signal: number; // e.g. 66
+  channel: number; // e.g. 11
 }
 
 export type WledEffectName =
-  | "Solid"
-  | "Blink"
-  | "Breathe"
-  | "Wipe"
-  | "Wipe Random"
-  | "Random Colors"
-  | "Sweep"
-  | "Dynamic"
-  | "Colorloop"
-  | "Rainbow"
-  | "Scan"
-  | "Scan Dual"
-  | "Fade"
-  | "Theater"
-  | "Theater Rainbow"
-  | "Running"
-  | "Saw"
-  | "Twinkle"
-  | "Dissolve"
-  | "Dissolve Rnd"
-  | "Sparkle"
-  | "Sparkle Dark"
-  | "Sparkle+"
-  | "Strobe"
-  | "Strobe Rainbow"
-  | "Strobe Mega"
-  | "Blink Rainbow"
-  | "Android"
-  | "Chase"
-  | "Chase Random"
-  | "Chase Rainbow"
-  | "Chase Flash"
-  | "Chase Flash Rnd"
-  | "Rainbow Runner"
-  | "Colorful"
-  | "Traffic Light"
-  | "Sweep Random"
-  | "Running 2"
-  | "Red & Blue"
-  | "Stream"
-  | "Scanner"
-  | "Lighthouse"
-  | "Fireworks"
-  | "Rain"
-  | "Merry Christmas"
-  | "Fire Flicker"
-  | "Gradient"
-  | "Loading"
-  | "Police"
-  | "Police All"
-  | "Two Dots"
-  | "Two Areas"
-  | "Circus"
-  | "Halloween"
-  | "Tri Chase"
-  | "Tri Wipe"
-  | "Tri Fade"
-  | "Lightning"
-  | "ICU"
-  | "Multi Comet"
-  | "Scanner Dual"
-  | "Stream 2"
-  | "Oscillate"
-  | "Pride 2015"
-  | "Juggle"
-  | "Palette"
-  | "Fire 2012"
-  | "Colorwaves"
-  | "Bpm"
-  | "Fill Noise"
-  | "Noise 1"
-  | "Noise 2"
-  | "Noise 3"
-  | "Noise 4"
-  | "Colortwinkles"
-  | "Lake"
-  | "Meteor"
-  | "Meteor Smooth"
-  | "Railway"
-  | "Ripple"
-  | "Twinklefox"
-  | "Twinklecat"
-  | "Halloween Eyes"
-  | "Solid Pattern"
-  | "Solid Pattern Tri"
-  | "Spots"
-  | "Spots Fade"
-  | "Glitter"
-  | "Candle"
-  | "Fireworks Starburst"
-  | "Fireworks 1D"
-  | "Bouncing Balls"
-  | "Sinelon"
-  | "Sinelon Dual"
-  | "Sinelon Rainbow"
-  | "Popcorn"
-  | "Drip"
-  | "Plasma"
-  | "Percent"
-  | "Ripple Rainbow"
-  | "Heartbeat"
-  | "Pacifica"
-  | "Candle Multi"
-  | "Solid Glitter"
-  | "Sunrise"
-  | "Phased"
-  | "Twinkleup"
-  | "Noise Pal"
-  | "Sine"
-  | "Phased Noise"
-  | "Flow"
-  | "Chunchun"
-  | "Dancing Shadows"
-  | "Washing Machine";
+  | 'Solid'
+  | 'Blink'
+  | 'Breathe'
+  | 'Wipe'
+  | 'Wipe Random'
+  | 'Random Colors'
+  | 'Sweep'
+  | 'Dynamic'
+  | 'Colorloop'
+  | 'Rainbow'
+  | 'Scan'
+  | 'Scan Dual'
+  | 'Fade'
+  | 'Theater'
+  | 'Theater Rainbow'
+  | 'Running'
+  | 'Saw'
+  | 'Twinkle'
+  | 'Dissolve'
+  | 'Dissolve Rnd'
+  | 'Sparkle'
+  | 'Sparkle Dark'
+  | 'Sparkle+'
+  | 'Strobe'
+  | 'Strobe Rainbow'
+  | 'Strobe Mega'
+  | 'Blink Rainbow'
+  | 'Android'
+  | 'Chase'
+  | 'Chase Random'
+  | 'Chase Rainbow'
+  | 'Chase Flash'
+  | 'Chase Flash Rnd'
+  | 'Rainbow Runner'
+  | 'Colorful'
+  | 'Traffic Light'
+  | 'Sweep Random'
+  | 'Running 2'
+  | 'Red & Blue'
+  | 'Stream'
+  | 'Scanner'
+  | 'Lighthouse'
+  | 'Fireworks'
+  | 'Rain'
+  | 'Merry Christmas'
+  | 'Fire Flicker'
+  | 'Gradient'
+  | 'Loading'
+  | 'Police'
+  | 'Police All'
+  | 'Two Dots'
+  | 'Two Areas'
+  | 'Circus'
+  | 'Halloween'
+  | 'Tri Chase'
+  | 'Tri Wipe'
+  | 'Tri Fade'
+  | 'Lightning'
+  | 'ICU'
+  | 'Multi Comet'
+  | 'Scanner Dual'
+  | 'Stream 2'
+  | 'Oscillate'
+  | 'Pride 2015'
+  | 'Juggle'
+  | 'Palette'
+  | 'Fire 2012'
+  | 'Colorwaves'
+  | 'Bpm'
+  | 'Fill Noise'
+  | 'Noise 1'
+  | 'Noise 2'
+  | 'Noise 3'
+  | 'Noise 4'
+  | 'Colortwinkles'
+  | 'Lake'
+  | 'Meteor'
+  | 'Meteor Smooth'
+  | 'Railway'
+  | 'Ripple'
+  | 'Twinklefox'
+  | 'Twinklecat'
+  | 'Halloween Eyes'
+  | 'Solid Pattern'
+  | 'Solid Pattern Tri'
+  | 'Spots'
+  | 'Spots Fade'
+  | 'Glitter'
+  | 'Candle'
+  | 'Fireworks Starburst'
+  | 'Fireworks 1D'
+  | 'Bouncing Balls'
+  | 'Sinelon'
+  | 'Sinelon Dual'
+  | 'Sinelon Rainbow'
+  | 'Popcorn'
+  | 'Drip'
+  | 'Plasma'
+  | 'Percent'
+  | 'Ripple Rainbow'
+  | 'Heartbeat'
+  | 'Pacifica'
+  | 'Candle Multi'
+  | 'Solid Glitter'
+  | 'Sunrise'
+  | 'Phased'
+  | 'Twinkleup'
+  | 'Noise Pal'
+  | 'Sine'
+  | 'Phased Noise'
+  | 'Flow'
+  | 'Chunchun'
+  | 'Dancing Shadows'
+  | 'Washing Machine';
 
 export type WledPaletteName =
-  "Default"
-  | "* Random Cycle"
-  | "* Color 1"
-  | "* Colors 1&2"
-  | "* Color Gradient"
-  | "* Colors Only"
-  | "Party"
-  | "Cloud"
-  | "Lava"
-  | "Ocean"
-  | "Forest"
-  | "Rainbow"
-  | "Rainbow Bands"
-  | "Sunset"
-  | "Rivendell"
-  | "Breeze"
-  | "Red & Blue"
-  | "Yellowout"
-  | "Analogous"
-  | "Splash"
-  | "Pastel"
-  | "Sunset 2"
-  | "Beech"
-  | "Vintage"
-  | "Departure"
-  | "Landscape"
-  | "Beach"
-  | "Sherbet"
-  | "Hult"
-  | "Hult 64"
-  | "Drywet"
-  | "Jul"
-  | "Grintage"
-  | "Rewhi"
-  | "Tertiary"
-  | "Fire"
-  | "Icefire"
-  | "Cyane"
-  | "Light Pink"
-  | "Autumn"
-  | "Magenta"
-  | "Magred"
-  | "Yelmag"
-  | "Yelblu"
-  | "Orange & Teal"
-  | "Tiamat"
-  | "April Night"
-  | "Orangery"
-  | "C9"
-  | "Sakura"
-  | "Aurora"
-  | "Atlantica"
-  | "C9 2"
-  | "C9 New";
-
+  | 'Default'
+  | '* Random Cycle'
+  | '* Color 1'
+  | '* Colors 1&2'
+  | '* Color Gradient'
+  | '* Colors Only'
+  | 'Party'
+  | 'Cloud'
+  | 'Lava'
+  | 'Ocean'
+  | 'Forest'
+  | 'Rainbow'
+  | 'Rainbow Bands'
+  | 'Sunset'
+  | 'Rivendell'
+  | 'Breeze'
+  | 'Red & Blue'
+  | 'Yellowout'
+  | 'Analogous'
+  | 'Splash'
+  | 'Pastel'
+  | 'Sunset 2'
+  | 'Beech'
+  | 'Vintage'
+  | 'Departure'
+  | 'Landscape'
+  | 'Beach'
+  | 'Sherbet'
+  | 'Hult'
+  | 'Hult 64'
+  | 'Drywet'
+  | 'Jul'
+  | 'Grintage'
+  | 'Rewhi'
+  | 'Tertiary'
+  | 'Fire'
+  | 'Icefire'
+  | 'Cyane'
+  | 'Light Pink'
+  | 'Autumn'
+  | 'Magenta'
+  | 'Magred'
+  | 'Yelmag'
+  | 'Yelblu'
+  | 'Orange & Teal'
+  | 'Tiamat'
+  | 'April Night'
+  | 'Orangery'
+  | 'C9'
+  | 'Sakura'
+  | 'Aurora'
+  | 'Atlantica'
+  | 'C9 2'
+  | 'C9 New';
 
 export type UInt8 =
-  0
+  | 0
   | 1
   | 2
   | 3
@@ -789,15 +794,19 @@ export type UInt16 = number;
 export type Int16 = number;
 export type WLedRgbColor = [UInt8, UInt8, UInt8];
 export type WLedRgbwColor = [UInt8, UInt8, UInt8, UInt8];
-export type WLedRgbOrRgbwColor = [UInt8, UInt8, UInt8] | [UInt8, UInt8, UInt8, UInt8];
+export type WLedRgbOrRgbwColor =
+  | [UInt8, UInt8, UInt8]
+  | [UInt8, UInt8, UInt8, UInt8];
 export type WledOptionalRgbColor = WLedRgbColor | [];
 
 export function isWledRgbColor(input: unknown): input is WLedRgbColor {
-  return Array.isArray(input)
-    && input.length === 3
-    && typeof (input[0]) === "number"
-    && typeof (input[1]) === "number"
-    && typeof (input[2]) === "number";
+  return (
+    Array.isArray(input) &&
+    input.length === 3 &&
+    typeof input[0] === 'number' &&
+    typeof input[1] === 'number' &&
+    typeof input[2] === 'number'
+  );
 }
 
 export enum WledEffectModeIndex {
@@ -918,118 +927,3 @@ export enum WledEffectModeIndex {
   CANDY_CANE = 114, // FX_MODE_CANDY_CANE            : "Candy Cane"
   BLENDS = 115, // FX_MODE_BLENDS                : "Blends"
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

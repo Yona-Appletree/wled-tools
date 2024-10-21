@@ -1,11 +1,7 @@
 {
   "rev": [1, 0],
-  "vid": 2203191,
-  "id": {
-    "mdns": "wled.local",
-    "name": "WLED",
-    "inv": "Light"
-  },
+  "vid": 2212222,
+  "id": { "mdns": "wled-fdb214", "name": "dig2go", "inv": "Light" },
   "nw": {
     "ins": [
       {
@@ -18,103 +14,66 @@
     ]
   },
   "ap": {
-    "ssid": "WlED-ScarfTest",
+    "ssid": "WLED-C",
     "pskl": 8,
     "chan": 1,
     "hide": 0,
     "behav": 0,
     "ip": [4, 3, 2, 1]
   },
-  "wifi": {
-    "sleep": false
-  },
+  "wifi": { "sleep": false },
   "hw": {
     "led": {
-      "total": 64,
-      "maxpwr": 2000,
+      "total": 300,
+      "maxpwr": 3000,
       "ledma": 55,
       "cct": false,
       "cr": false,
       "cb": 0,
       "fps": 42,
-      "rgbwm": 3,
+      "rgbwm": 255,
+      "ld": false,
       "ins": [
         {
           "start": 0,
-          "len": 450,
-          "pin": [4],
+          "len": 300,
+          "pin": [16],
           "order": 0,
           "rev": false,
           "skip": 0,
           "type": 22,
-          "ref": false
+          "ref": false,
+          "rgbwm": 0
         }
       ]
     },
     "com": [],
     "btn": {
       "max": 4,
+      "pull": true,
       "ins": [
-        {
-          "type": 2,
-          "pin": [0],
-          "macros": [0, 0, 0]
-        },
-        {
-          "type": 0,
-          "pin": [-1],
-          "macros": [0, 0, 0]
-        },
-        {
-          "type": 0,
-          "pin": [-1],
-          "macros": [0, 0, 0]
-        },
-        {
-          "type": 0,
-          "pin": [-1],
-          "macros": [0, 0, 0]
-        }
+        { "type": 2, "pin": [0], "macros": [0, 0, 0] },
+        { "type": 0, "pin": [-1], "macros": [0, 0, 0] },
+        { "type": 0, "pin": [-1], "macros": [0, 0, 0] },
+        { "type": 0, "pin": [-1], "macros": [0, 0, 0] }
       ],
       "tt": 32,
       "mqtt": false
     },
-    "ir": {
-      "pin": -1,
-      "type": 0,
-      "sel": true
-    },
-    "relay": {
-      "pin": -1,
-      "rev": false
-    },
-    "baud": 1152
+    "ir": { "pin": 5, "type": 0, "sel": true },
+    "relay": { "pin": 12, "rev": false },
+    "baud": 1152,
+    "if": { "i2c-pin": [-1, -1], "spi-pin": [-1, -1, -1] }
   },
   "light": {
     "scale-bri": 100,
     "pal-mode": 0,
     "aseg": false,
-    "gc": {
-      "bri": 1,
-      "col": 2.8
-    },
-    "tr": {
-      "mode": true,
-      "dur": 7,
-      "pal": 0
-    },
-    "nl": {
-      "mode": 1,
-      "dur": 60,
-      "tbri": 0,
-      "macro": 0
-    }
+    "gc": { "bri": 1, "col": 2.8 },
+    "tr": { "mode": true, "dur": 7, "pal": 0 },
+    "nl": { "mode": 1, "dur": 60, "tbri": 0, "macro": 0 }
   },
-  "def": {
-    "ps": 7,
-    "on": true,
-    "bri": 128
-  },
+  "def": { "ps": 1, "on": true, "bri": 255 },
   "if": {
     "sync": {
       "port0": 21324,
@@ -133,60 +92,37 @@
         "va": false,
         "hue": true,
         "macro": false,
-        "twice": false,
-        "grp": 1
+        "grp": 1,
+        "ret": 0
       }
     },
-    "nodes": {
-      "list": true,
-      "bcast": true
-    },
+    "nodes": { "list": true, "bcast": true },
     "live": {
       "en": true,
       "mso": false,
       "port": 5568,
       "mc": false,
-      "dmx": {
-        "uni": 1,
-        "seqskip": false,
-        "addr": 1,
-        "mode": 4
-      },
+      "dmx": { "uni": 1, "seqskip": false, "addr": 1, "mode": 4 },
       "timeout": 25,
       "maxbri": false,
       "no-gc": true,
       "offset": 0
     },
-    "va": {
-      "alexa": false,
-      "macros": [0, 0]
-    },
-    "blynk": {
-      "token": "",
-      "host": "blynk-cloud.com",
-      "port": 80
-    },
+    "va": { "alexa": false, "macros": [0, 0], "p": 0 },
     "mqtt": {
       "en": false,
       "broker": "",
       "port": 1883,
       "user": "",
       "pskl": 0,
-      "cid": "WLED-767a84",
-      "topics": {
-        "device": "wled/767a84",
-        "group": "wled/all"
-      }
+      "cid": "WLED-fdb214",
+      "topics": { "device": "wled/fdb214", "group": "wled/all" }
     },
     "hue": {
       "en": false,
       "id": 1,
       "iv": 25,
-      "recv": {
-        "on": true,
-        "bri": true,
-        "col": true
-      },
+      "recv": { "on": true, "bri": true, "col": true },
       "ip": [0, 0, 0, 0]
     },
     "ntp": {
@@ -203,23 +139,25 @@
     "clock": 0,
     "cntdwn": false,
     "min": 0,
-    "max": 29,
+    "max": 43,
     "o12pix": 0,
     "o5m": false,
     "osec": false
   },
   "timers": {
-    "cntdwn": {
-      "goal": [20, 1, 1, 0, 0, 0],
-      "macro": 0
-    },
+    "cntdwn": { "goal": [20, 1, 1, 0, 0, 0], "macro": 0 },
     "ins": []
   },
-  "ota": {
-    "lock": false,
-    "lock-wifi": false,
-    "pskl": 7,
-    "aota": true
-  },
-  "um": {}
+  "ota": { "lock": false, "lock-wifi": false, "pskl": 7, "aota": true },
+  "um": {
+    "AudioReactive": {
+      "enabled": false,
+      "analogmic": { "pin": -1 },
+      "digitalmic": { "type": 1, "pin": [19, 4, 18, -1, -1, -1] },
+      "config": { "squelch": 10, "gain": 30, "AGC": 1 },
+      "dynamics": { "limiter": true, "rise": 80, "fall": 1400 },
+      "frequency": { "scale": 3 },
+      "sync": { "port": 11988, "mode": 0 }
+    }
+  }
 }

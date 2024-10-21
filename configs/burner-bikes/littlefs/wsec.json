@@ -1,29 +1,29 @@
 {
-    "nw": {
-        "ins": [
-            {
-                "psk": ""
-            }
-        ]
+  "nw": {
+    "ins": [
+      {
+        "psk": ""
+      }
+    ]
+  },
+  "ap": {
+    "psk": "wled1234"
+  },
+  "if": {
+    "blynk": {
+      "token": ""
     },
-    "ap": {
-        "psk": "wled1234"
+    "mqtt": {
+      "psk": ""
     },
-    "if": {
-        "blynk": {
-            "token": ""
-        },
-        "mqtt": {
-            "psk": ""
-        },
-        "hue": {
-            "key": "api"
-        }
-    },
-    "ota": {
-        "pwd": "wledota",
-        "lock": false,
-        "lock-wifi": false,
-        "aota": true
+    "hue": {
+      "key": "api"
     }
+  },
+  "ota": {
+    "pwd": "wledota",
+    "lock": false,
+    "lock-wifi": false,
+    "aota": true
+  }
 }
