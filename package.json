@@ -1,11 +1,13 @@
 {
+  "name": "@photomancer/wled-tools",
   "dependencies": {
     "@types/inquirer": "^8.2.1",
     "@types/node-fetch": "^2.6.1",
     "@types/plist": "^3.0.2",
     "@types/shelljs": "^0.8.11",
     "@types/xml2js": "^0.4.11",
-    "inquirer": "^8.2.4",
+    "chalk": "^4.1.2",
+    "inquirer": "^8.2.6",
     "node-fetch": "^2.6.7",
     "plist": "^3.0.5",
     "shelljs": "^0.8.5",
@@ -14,10 +16,16 @@
   "devDependencies": {
     "husky": "^9.1.6",
     "prettier": "^3.3.3",
-    "ts-node": "^10.8.1"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.3",
+    "zod": "^3.23.8"
   },
   "scripts": {
     "prepare": "husky",
-    "pre-commit": "npx prettier --write ."
+    "pre-commit": "npm run fix:style && npm run check:types && vitest --run",
+    "test": "vitest",
+    "check:types": "tsc --noEmit",
+    "fix:style": "prettier --write ."
   }
 }

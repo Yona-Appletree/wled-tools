@@ -1,8 +1,8 @@
 #!/usr/bin/env ./node_modules/.bin/ts-node-esm
 
-import { listSerialPorts } from './util/serial-util';
-import { useFirstOrChoose } from './util/console-util';
-import { appStep, fail, runShell } from './util/general';
+import { listSerialPorts } from './src/util/serial-util';
+import { useFirstOrChoose } from './src/util/console-util';
+import { appStep, fail, runShell } from './src/util/general';
 import * as fs from 'fs';
 
 (async () => {

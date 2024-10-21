@@ -1,4 +1,4 @@
-import { timeoutPromise } from './promise-util';
+import { timeoutPromise } from './promise-util.ts';
 import fetch from 'node-fetch';
 
 export async function lookForWled(host = '4.3.2.1', timeoutSeconds = 10) {

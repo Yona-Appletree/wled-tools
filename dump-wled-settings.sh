@@ -19,4 +19,4 @@ FILENAME="$NAME/dumped.bin"
 esptool.py --baud 115200 --before default_reset --after hard_reset read_flash 0x310000 0xF0000 $FILENAME
 
 # Decode the file
-mklittlefs/mklittlefs -u "$NAME/contents" "$FILENAME"
+bin/mklittlefs -u "$NAME/contents" "$FILENAME"

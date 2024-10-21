@@ -1,4 +1,4 @@
-import { Dictionary } from './dictionary.util';
+import { Dictionary } from './dictionary.util.ts';
 
 export interface WledApiJsonStateResponse {
   state: WledApiGlobalState;

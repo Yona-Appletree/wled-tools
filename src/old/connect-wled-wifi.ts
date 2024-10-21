@@ -1,9 +1,9 @@
 #!/usr/bin/env ./node_modules/.bin/ts-node-esm --experimental-specifier-resolution=node
 
-import { connectToAp, scanAccessPoints } from './util/scan-access-points';
-import { appStep, fail } from './util/general';
+import { connectToAp, scanAccessPoints } from '../util/scan-access-points.ts';
+import { appStep, fail } from '../util/general.ts';
 import * as inquirer from 'inquirer';
-import { lookForWled } from './util/wled-util';
+import { lookForWled } from '../util/wled-util.ts';
 import { exec } from 'child_process';
 
 (async () => {

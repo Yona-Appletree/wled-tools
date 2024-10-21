@@ -1,3 +1,4 @@
-config-builds
+logs
 esptool.bk
 node_modules
+build

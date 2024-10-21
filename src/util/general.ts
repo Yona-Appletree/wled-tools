@@ -1,7 +1,8 @@
 import { exec } from 'child_process';
+import chalk from 'chalk';
 
 export function fail(reason: string): never {
-  console.error('\nFailed: ' + reason);
+  console.error('\nError: ' + reason + '\n');
   process.exit(1);
 }
 
@@ -10,7 +11,7 @@ export async function appStep<T>(
   workFn: () => Promise<T | false>,
   successMessageFn?: (result: T) => string,
 ): Promise<T> {
-  process.stdout.write('\n' + message + '... ');
+  console.info('\n' + chalk.bold(chalk.blueBright(message)) + '... ');
 
   let result: T | false;
 
@@ -38,7 +39,7 @@ export async function runShell(command: string): Promise<{
   stdout: string;
   stderr: string;
 }> {
-  console.info(command);
+  console.info(chalk.grey(command));
   return new Promise((resolve, reject) => {
     return exec(command, (error, stdout, stderr) => {
       if (error) {
